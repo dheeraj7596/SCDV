@@ -60,6 +60,3 @@ For theory and explanation of SDV, please visit https://dheeraj7596.github.io/SD
     Note: You neednot download 20Newsgroup or Reuters-21578 dataset. All datasets are present in their respective directories.
 
 [//]: # (We used SGMl parser for parsing Reuters-21578 dataset from  https://gist.github.com/herrfz/7967781)
-
-
-   [git-repo-url]: < https://gist.github.com/herrfz/7967781>
