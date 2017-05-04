@@ -48,19 +48,19 @@ $ python metrics.py 200 60
 ```
 
 #### Information Retrieval
-Change directory to IR for experimenting on information Retrieval task. IR Datasets mentioned in the paper can be downloaded from [TREC website] (http://trec.nist.gov/data/docs_eng.html). 
+Change directory to IR for experimenting on information Retrieval task. IR Datasets mentioned in the paper can be downloaded from [TREC website](http://trec.nist.gov/data/docs_eng.html). 
 
 You will need to run the documents and queries through a full fledged IR pipeline system like Apache Lucene or [Project Lemur](https://www.lemurproject.org/) in order to 
-  - Tokenize the data, apply Porter stemmer and remove stop words.
-  - Build inverted and forward index
+  - Tokenize the data, remove stop words and pass tokens through a Porter Stemmer.
+  - Build inverted and forward index.
   - Build a basic language model retrieval system with Dirichlet smoothing.
 
 Data Format
-  - The IR Data folder must have a file called "queries.txt" and folder called *raw* that has all the document.
-  - Each file in *raw* should be a single document containing space separated processed words. The file should be named as doc_ID.txt.
-  - Each line in queries.txt should be a single text query containing space separated processed words.
+  - The IR Data folder must have a file called "queries.txt" and a folder called *raw* that has all the documents.
+  - Each file in *raw* should be a single document containing space separated processed tokens. File must be named as doc_ID.txt.
+  - Each line in queries.txt should be a single query containing space separated processed words.
 
-To interpolate this language model with the query-document score obtained from SCDV, run:
+To interpolate language model retrieval system with the query-document score obtained from SCDV:
 
 Get word vectors for all terms in vocabulary:
 ```sh
