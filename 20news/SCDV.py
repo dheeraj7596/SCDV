@@ -4,7 +4,7 @@ import pandas as pd
 import time
 from nltk.corpus import stopwords
 import numpy as np
-from KaggleWord2VecUtility_Dheeraj import KaggleWord2VecUtility
+from KaggleWord2VecUtility import KaggleWord2VecUtility
 from numpy import float32
 import math
 from sklearn.ensemble import RandomForestClassifier
