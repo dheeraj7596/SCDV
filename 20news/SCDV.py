@@ -4,7 +4,7 @@ import pandas as pd
 import time
 from nltk.corpus import stopwords
 import numpy as np
-from KaggleWord2VecUtility_Dheeraj import KaggleWord2VecUtility
+from KaggleWord2VecUtility import KaggleWord2VecUtility
 from numpy import float32
 import math
 from sklearn.ensemble import RandomForestClassifier
@@ -217,11 +217,23 @@ if __name__ == '__main__':
 	endtime = time.time() - start
 	print "SDV created and dumped: ", endtime, "seconds."
 	print "Fitting a SVM classifier on labeled training data..."
+	print "5 fold cross validation on multiple parameters"
 
-	for i in drange(0.1,10.0,0.2):
-		clf=svm.LinearSVC(C=i)
+	param_grid = [
+	  {'C': np.arange(0.1, 10, 0.5)}
+	 ]
+	scores = ['accuracy', 'f1_micro' , 'f1_macro' , 'f1_weighted' ,  'recall_micro',  'precision_micro', 'recall_macro',  'precision_macro', 'recall_weighted', 'precision_weighted']
+	for score in scores:
+		print "# Tuning hyper-parameters for", score, "\n"
+		clf = GridSearchCV(LinearSVC(C=1), param_grid, cv=5, scoring= '%s' % score)
 		clf.fit(gwbowv, train["class"])
-		print i,"------------",clf.score(gwbowv_test,test["class"])
+		print "Best parameters set found on development set:\n"
+		print clf.best_params_
+		print "Best value of ", score, ":\n"
+		print clf.best_score_
+		Y_true, Y_pred  = test["class"], clf.predict(gwbowv_test,test["class"])
+		print "Accuracy for score ", score, " :",clf.score(gwbowv_test,test["class"])
+		print classification_report(Y_true, Y_pred)
 	
 	endtime = time.time()
 	print "Total time taken: ", endtime-start, "seconds." 

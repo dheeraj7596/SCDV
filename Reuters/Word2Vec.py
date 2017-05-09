@@ -4,7 +4,7 @@ import nltk.data
 import logging
 import numpy as np
 from gensim.models import Word2Vec
-from KaggleWord2VecUtility_Dheeraj import KaggleWord2VecUtility
+from KaggleWord2VecUtility import KaggleWord2VecUtility
 import time
 from sklearn.preprocessing import normalize
 import sys
@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
 	print "Training Word2Vec model..."
 	# Train Word2Vec model.
-	model = Word2Vec(sentences, workers=num_workers, hs = 1, sg = 1, negative = 10, iter = 25,\
+	model = Word2Vec(sentences, workers=num_workers, hs = 0, sg = 1, negative = 10, iter = 25,\
 	            size=num_features, min_count = min_word_count, \
 	            window = context, sample = downsampling, seed=1)
 
