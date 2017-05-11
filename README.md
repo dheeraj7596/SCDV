@@ -3,7 +3,7 @@
 
 ## Introduction
   - For text classification and information retrieval tasks, text data has to be represented as a fixed dimension vector. 
-  - We propose simple feature construction technique named **Sparse Document Vectors (SDV).**
+  - We propose simple feature construction technique named **Sparse Composite Document Vectors (SCDV).**
   - We demonstrate our method through experiments on multi-class classification on 20newsgroup dataset and multi-label text classification on Reuters-21578 dataset. 
 
 ## Testing
@@ -19,12 +19,16 @@ Get word vectors for all words in vocabulary:
 $ python Word2Vec.py 200
 # Word2Vec.py takes word vector dimension as an argument. We took it as 200.
 ```
-Get Sparse Document Vectors (SDV) for documents in train and test set and accuracy of prediction on test set:
+Get Sparse Document Vectors (SCDV) for documents in train and test set and accuracy of prediction on test set:
 ```sh
-$ python SDV.py 200 60
-# SDV.py takes word vector dimension and number of clusters as arguments. We took word vector dimension as 200 and number of clusters as 60.
+$ python SCDV.py 200 60
+# SCDV.py takes word vector dimension and number of clusters as arguments. We took word vector dimension as 200 and number of clusters as 60.
 ```
-
+Get Topic coherence for documents in train set:
+```sh
+$ python TopicCoherence.py 200 60
+# TopicCoherence.py takes word vector dimension and number of clusters as arguments. We took word vector dimension as 200 and number of clusters as 60.
+```
 #### Reuters
 Change directory to Reuters for experimenting on Reuters-21578 dataset. As reuters data is in SGML format, parsing data and creating pickle file of parsed data can be done as follows:
 ```sh
@@ -36,10 +40,10 @@ Get word vectors for all words in vocabulary:
 $ python Word2Vec.py 200
 # Word2Vec.py takes word vector dimension as an argument. We took it as 200.
 ```
-Get Sparse Document Vectors (SDV) for documents in train and test set:
+Get Sparse Document Vectors (SCDV) for documents in train and test set:
 ```sh
-$ python SDV.py 200 60
-# SDV.py takes word vector dimension and number of clusters as arguments. We took word vector dimension as 200 and number of clusters as 60.
+$ python SCDV.py 200 60
+# SCDV.py takes word vector dimension and number of clusters as arguments. We took word vector dimension as 200 and number of clusters as 60.
 ```
 Get performance metrics on test set:
 ```sh
@@ -67,10 +71,10 @@ Get word vectors for all terms in vocabulary:
 $ python Word2Vec.py 300 sjm
 # Word2Vec.py takes word vector dimension and folder containing IR dataset as arguments. We took 300 and sjm (San Jose Mercury).
 ```
-Create Sparse Document Vectors (SDV) for all documents and queries and compute similarity scores for all query-document pairs.
+Create Sparse Document Vectors (SCDV) for all documents and queries and compute similarity scores for all query-document pairs.
 ```sh
-$ python SDV.py 300 100 sjm
-# SDV.py takes word vector dimension, number of clusters as arguments and folder containing IR dataset as arguments. We took 300 100 and sjm.
+$ python SCDV.py 300 100 sjm
+# SCDV.py takes word vector dimension, number of clusters as arguments and folder containing IR dataset as arguments. We took 300 100 and sjm.
 # Change the code to store these scores in a format that can be used by the IR system.
 ```
 Use these scores to interpolate with the language model scores with interpolation parameter 0.5.
@@ -84,7 +88,7 @@ Minimum requirements:
   -  Pandas
   -  Gensim
 
-For theory and explanation of SDV, please visit https://dheeraj7596.github.io/SDV/.
+For theory and explanation of SCDV, please visit https://dheeraj7596.github.io/SDV/.
 
     Note: You neednot download 20Newsgroup or Reuters-21578 dataset. All datasets are present in their respective directories.
 
