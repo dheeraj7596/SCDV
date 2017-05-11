@@ -1,4 +1,6 @@
-import time;
+import time
+import warnings
+warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 from gensim.models import Word2Vec
 import pandas as pd
 import time
@@ -11,11 +13,14 @@ from sklearn.ensemble import RandomForestClassifier
 import sys
 from sklearn.externals import joblib
 from sklearn.feature_extraction.text import TfidfVectorizer,HashingVectorizer
-from sklearn import svm
+from sklearn.svm import SVC, LinearSVC
 import pickle
 import cPickle
 from math import *
+from sklearn.metrics import classification_report
 from sklearn.mixture import GMM
+from sklearn.model_selection import GridSearchCV
+from sklearn.preprocessing import label_binarize
 
 def drange(start, stop, step):
 	r = start
@@ -49,25 +54,31 @@ def read_GMM(idx_name, idx_proba_name):
 
 def get_probability_word_vectors(featurenames, word_centroid_map, num_clusters, word_idf_dict):
 	# This function computes probability word-cluster vectors.
-	prob_wordvecs_idf_len2alldata = {}
-
-	i = 0
-	for word in featurenames:
-		i += 1
-		if word in word_centroid_map:	
-			prob_wordvecs_idf_len2alldata[word] = {}
-			for index in range(0, num_clusters):
-					prob_wordvecs_idf_len2alldata[word][index] = model[word] * word_centroid_prob_map[word][index] * word_idf_dict[word] 
-
+	
 	prob_wordvecs = {}
 
-	for word in prob_wordvecs_idf_len2alldata.keys():
-		prob_wordvecs[word] = prob_wordvecs_idf_len2alldata[word][0]
-		for index in prob_wordvecs_idf_len2alldata[word].keys():
-			if index==0:
-				continue
-			prob_wordvecs[word] = np.concatenate((prob_wordvecs[word], prob_wordvecs_idf_len2alldata[word][index]), axis=1)
+	for word in word_centroid_map:
+		prob_wordvecs[word] = np.zeros( num_clusters * num_features, dtype="float32" )
+		for index in range(0, num_clusters):
+			prob_wordvecs[word][index*num_features:(index+1)*num_features] = model[word] * word_centroid_prob_map[word][index] * word_idf_dict[word]
+
+	# prob_wordvecs_idf_len2alldata = {}
+	# i = 0
+	# for word in featurenames:
+	# 	i += 1
+	# 	if word in word_centroid_map:	
+	# 		prob_wordvecs_idf_len2alldata[word] = {}
+	# 		for index in range(0, num_clusters):
+	# 				prob_wordvecs_idf_len2alldata[word][index] = model[word] * word_centroid_prob_map[word][index] * word_idf_dict[word] 
+
 	
+
+	# for word in prob_wordvecs_idf_len2alldata.keys():
+	# 	prob_wordvecs[word] = prob_wordvecs_idf_len2alldata[word][0]
+	# 	for index in prob_wordvecs_idf_len2alldata[word].keys():
+	# 		if index==0:
+	# 			continue
+	# 		prob_wordvecs[word] = np.concatenate((prob_wordvecs[word], prob_wordvecs_idf_len2alldata[word][index]))
 	return prob_wordvecs
 
 def create_cluster_vector_and_gwbowv(prob_wordvecs, wordlist, word_centroid_map, word_centroid_prob_map, dimension, word_idf_dict, featurenames, num_centroids, train=False):
@@ -120,12 +131,12 @@ if __name__ == '__main__':
 	# Set number of clusters.
 	num_clusters = int(sys.argv[2])
 	# Uncomment below line for creating new clusters.
-	idx, idx_proba = cluster_GMM(num_clusters, word_vectors)
+	# idx, idx_proba = cluster_GMM(num_clusters, word_vectors)
 
 	# Uncomment below lines for loading saved cluster assignments and probabaility of cluster assignments.
-	#idx_name = "gmm_latestclusmodel_len2alldata.pkl"
-	#idx_proba_name = "gmm_prob_latestclusmodel_len2alldata.pkl"
-	#idx, idx_proba = read_GMM(idx_name, idx_proba_name)
+	idx_name = "gmm_latestclusmodel_len2alldata.pkl"
+	idx_proba_name = "gmm_prob_latestclusmodel_len2alldata.pkl"
+	idx, idx_proba = read_GMM(idx_name, idx_proba_name)
 
 	# Create a Word / Index dictionary, mapping each vocabulary word to
 	# a cluster number
@@ -217,24 +228,24 @@ if __name__ == '__main__':
 	endtime = time.time() - start
 	print "SDV created and dumped: ", endtime, "seconds."
 	print "Fitting a SVM classifier on labeled training data..."
-	print "5 fold cross validation on multiple parameters"
 
 	param_grid = [
-	  {'C': np.arange(0.1, 10, 0.5)}
-	 ]
-	scores = ['accuracy', 'f1_micro' , 'f1_macro' , 'f1_weighted' ,  'recall_micro',  'precision_micro', 'recall_macro',  'precision_macro', 'recall_weighted', 'precision_weighted']
+	  {'C': np.arange(0.1, 7, 0.2)}]
+	scores = ['accuracy', 'recall_micro', 'f1_micro' , 'precision_micro', 'recall_macro', 'f1_macro' , 'precision_macro', 'recall_weighted', 'f1_weighted' , 'precision_weighted'] #, 'accuracy', 'recall', 'f1']
 	for score in scores:
+		strt = time.time()
 		print "# Tuning hyper-parameters for", score, "\n"
 		clf = GridSearchCV(LinearSVC(C=1), param_grid, cv=5, scoring= '%s' % score)
 		clf.fit(gwbowv, train["class"])
 		print "Best parameters set found on development set:\n"
 		print clf.best_params_
-		print "Best value of ", score, ":\n"
+		print "Best value for ", score, ":\n"
 		print clf.best_score_
-		Y_true, Y_pred  = test["class"], clf.predict(gwbowv_test,test["class"])
-		print "Accuracy for score ", score, " :",clf.score(gwbowv_test,test["class"])
-		print classification_report(Y_true, Y_pred)
-	
+		Y_true, Y_pred  = test["class"], clf.predict(gwbowv_test)
+		print "Report"
+		print classification_report(Y_true, Y_pred, digits=6)
+		print "Accuracy: ",clf.score(gwbowv_test,test["class"])
+		print "Time taken:", time.time() - strt, "\n"
 	endtime = time.time()
 	print "Total time taken: ", endtime-start, "seconds." 
 
