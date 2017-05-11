@@ -4,7 +4,7 @@ import pandas as pd
 import time
 from nltk.corpus import stopwords
 import numpy as np
-from KaggleWord2VecUtility import KaggleWord2VecUtility
+from KaggleWord2VecUtility_Dheeraj import KaggleWord2VecUtility
 from numpy import float32
 import math
 from sklearn.ensemble import RandomForestClassifier
@@ -52,24 +52,31 @@ def read_GMM(idx_name, idx_proba_name):
 
 def get_probability_word_vectors(featurenames, word_centroid_map, num_clusters, word_idf_dict):
 	# This function computes probability word-cluster vectors.
-	prob_wordvecs_idf_len2alldata = {}
-
-	i = 0
-	for word in featurenames:
-		i += 1
-		if word in word_centroid_map:	
-			prob_wordvecs_idf_len2alldata[word] = {}
-			for index in range(0, num_clusters):
-					prob_wordvecs_idf_len2alldata[word][index] = model[word] * word_centroid_prob_map[word][index] * word_idf_dict[word] 
-
+	
 	prob_wordvecs = {}
+	for word in word_centroid_map:
+		prob_wordvecs[word] = np.zeros( num_clusters * num_features, dtype="float32" )
+		for index in range(0, num_clusters):
+			prob_wordvecs[word][index*num_features:(index+1)*num_features] = model[word] * word_centroid_prob_map[word][index] * word_idf_dict[word]
 
-	for word in prob_wordvecs_idf_len2alldata.keys():
-		prob_wordvecs[word] = prob_wordvecs_idf_len2alldata[word][0]
-		for index in prob_wordvecs_idf_len2alldata[word].keys():
-			if index==0:
-				continue
-			prob_wordvecs[word] = np.concatenate((prob_wordvecs[word], prob_wordvecs_idf_len2alldata[word][index]), axis=1)
+
+	# prob_wordvecs_idf_len2alldata = {}
+
+	# i = 0
+	# for word in featurenames:
+	# 	i += 1
+	# 	if word in word_centroid_map:	
+	# 		prob_wordvecs_idf_len2alldata[word] = {}
+	# 		for index in range(0, num_clusters):
+	# 				prob_wordvecs_idf_len2alldata[word][index] = model[word] * word_centroid_prob_map[word][index] * word_idf_dict[word] 
+
+
+	# for word in prob_wordvecs_idf_len2alldata.keys():
+	# 	prob_wordvecs[word] = prob_wordvecs_idf_len2alldata[word][0]
+	# 	for index in prob_wordvecs_idf_len2alldata[word].keys():
+	# 		if index==0:
+	# 			continue
+	# 		prob_wordvecs[word] = np.concatenate((prob_wordvecs[word], prob_wordvecs_idf_len2alldata[word][index]), axis=1)
 	
 	return prob_wordvecs
 
