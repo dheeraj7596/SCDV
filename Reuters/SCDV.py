@@ -15,7 +15,7 @@ from sklearn import svm
 import pickle
 import cPickle
 from math import *
-from sklearn.mixture import GMM
+from sklearn.mixture import GaussianMixture
 from sklearn.cross_validation import train_test_split
 from sklearn.preprocessing import MultiLabelBinarizer
 from pandas import DataFrame
@@ -28,10 +28,11 @@ def drange(start, stop, step):
 
 def cluster_GMM(num_clusters, word_vectors):
 	# Initalize a GMM object and use it for clustering.
-	clf =  GMM(n_components=num_clusters,
-                    covariance_type="tied", init_params='wc', n_iter=10)
+	clf =  GaussianMixture(n_components=num_clusters,
+                    covariance_type="tied", init_params='kmeans', max_iter=50)
 	# Get cluster assignments.
-	idx = clf.fit_predict(word_vectors)
+	clf.fit(word_vectors)
+	idx = clf.predict(word_vectors)
 	print "Clustering Done...", time.time()-start, "seconds"
 	# Get probabilities of cluster assignments.
 	idx_proba = clf.predict_proba(word_vectors)
@@ -119,7 +120,7 @@ if __name__ == '__main__':
   	# Load the trained Word2Vec model.
   	model = Word2Vec.load(model_name)
   	# Get wordvectors for all words in vocabulary.
-	word_vectors = model.syn0
+	word_vectors = model.wv.syn0
 
 	all = pd.read_pickle('all.pkl')
 
@@ -134,10 +135,10 @@ if __name__ == '__main__':
 
 	# Create a Word / Index dictionary, mapping each vocabulary word to
 	# a cluster number
-	word_centroid_map = dict(zip( model.index2word, idx ))
+	word_centroid_map = dict(zip( model.wv.index2word, idx ))
 	# Create a Word / Probability of cluster assignment dictionary, mapping each vocabulary word to
 	# list of probabilities of cluster assignments.
-	word_centroid_prob_map = dict(zip( model.index2word, idx_proba ))
+	word_centroid_prob_map = dict(zip( model.wv.index2word, idx_proba ))
 
 	# Computing tf-idf values.
 	traindata = []

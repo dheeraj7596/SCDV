@@ -1,6 +1,5 @@
 import time
 import warnings
-warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
 from gensim.models import Word2Vec
 import pandas as pd
 import time
@@ -18,7 +17,7 @@ import pickle
 import cPickle
 from math import *
 from sklearn.metrics import classification_report
-from sklearn.mixture import GMM
+from sklearn.mixture import GaussianMixture
 from sklearn.model_selection import GridSearchCV
 from sklearn.preprocessing import label_binarize
 
@@ -30,10 +29,11 @@ def drange(start, stop, step):
 
 def cluster_GMM(num_clusters, word_vectors):
 	# Initalize a GMM object and use it for clustering.
-	clf =  GMM(n_components=num_clusters,
-                    covariance_type="tied", init_params='wc', n_iter=10)
+	clf =  GaussianMixture(n_components=num_clusters,
+                    covariance_type="tied", init_params='kmeans', max_iter=50)
 	# Get cluster assignments.
-	idx = clf.fit_predict(word_vectors)
+	clf.fit(word_vectors)
+	idx = clf.predict(word_vectors)
 	print "Clustering Done...", time.time()-start, "seconds"
 	# Get probabilities of cluster assignments.
 	idx_proba = clf.predict_proba(word_vectors)
@@ -60,7 +60,10 @@ def get_probability_word_vectors(featurenames, word_centroid_map, num_clusters, 
 	for word in word_centroid_map:
 		prob_wordvecs[word] = np.zeros( num_clusters * num_features, dtype="float32" )
 		for index in range(0, num_clusters):
-			prob_wordvecs[word][index*num_features:(index+1)*num_features] = model[word] * word_centroid_prob_map[word][index] * word_idf_dict[word]
+			try:
+				prob_wordvecs[word][index*num_features:(index+1)*num_features] = model[word] * word_centroid_prob_map[word][index] * word_idf_dict[word]
+			except:
+				continue
 
 	# prob_wordvecs_idf_len2alldata = {}
 	# i = 0
@@ -120,7 +123,7 @@ if __name__ == '__main__':
   	# Load the trained Word2Vec model.
   	model = Word2Vec.load(model_name)
   	# Get wordvectors for all words in vocabulary.
-	word_vectors = model.syn0
+	word_vectors = model.wv.syn0
 
 	# Load train data.
 	train = pd.read_csv( 'data/train_v2.tsv', header=0, delimiter="\t")
@@ -131,19 +134,19 @@ if __name__ == '__main__':
 	# Set number of clusters.
 	num_clusters = int(sys.argv[2])
 	# Uncomment below line for creating new clusters.
-	# idx, idx_proba = cluster_GMM(num_clusters, word_vectors)
+	idx, idx_proba = cluster_GMM(num_clusters, word_vectors)
 
 	# Uncomment below lines for loading saved cluster assignments and probabaility of cluster assignments.
-	idx_name = "gmm_latestclusmodel_len2alldata.pkl"
-	idx_proba_name = "gmm_prob_latestclusmodel_len2alldata.pkl"
-	idx, idx_proba = read_GMM(idx_name, idx_proba_name)
+	# idx_name = "gmm_latestclusmodel_len2alldata.pkl"
+	# idx_proba_name = "gmm_prob_latestclusmodel_len2alldata.pkl"
+	# idx, idx_proba = read_GMM(idx_name, idx_proba_name)
 
 	# Create a Word / Index dictionary, mapping each vocabulary word to
 	# a cluster number
-	word_centroid_map = dict(zip( model.index2word, idx ))
+	word_centroid_map = dict(zip( model.wv.index2word, idx ))
 	# Create a Word / Probability of cluster assignment dictionary, mapping each vocabulary word to
 	# list of probabilities of cluster assignments.
-	word_centroid_prob_map = dict(zip( model.index2word, idx_proba ))
+	word_centroid_prob_map = dict(zip( model.wv.index2word, idx_proba ))
 
 	# Computing tf-idf values.
 	traindata = []
