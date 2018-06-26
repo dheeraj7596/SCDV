@@ -6,6 +6,24 @@
   - We propose simple feature construction technique named **Sparse Composite Document Vectors (SCDV).**
   - We demonstrate our method through experiments on multi-class classification on 20newsgroup dataset and multi-label text classification on Reuters-21578 dataset. 
 
+## Citation
+If you find SCDV useful in your research, please consider citing:
+```
+@article{mekala2016scdv,
+  title={SCDV: Sparse Composite Document Vectors using soft clustering over distributional representations},
+  author={Mekala, Dheeraj and Gupta, Vivek and Paranjape, Bhargavi and Karnick, Harish},
+  journal={arXiv preprint arXiv:1612.06778},
+  year={2016}
+}
+@inproceedings{mekala2017scdv,
+  title={SCDV: Sparse Composite Document Vectors using soft clustering over distributional representations},
+  author={Mekala, Dheeraj and Gupta, Vivek and Paranjape, Bhargavi and Karnick, Harish},
+  booktitle={Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing},
+  pages={659--669},
+  year={2017}
+}
+```
+
 ## Testing
 There are 2 folders named 20news and Reuters which contains code related to multi-class classification on 20Newsgroup dataset and multi-label classification on Reuters dataset.
 #### 20Newsgroup
