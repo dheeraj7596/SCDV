@@ -1,9 +1,9 @@
-# Text Classification with Sparse Composite Document Vectors
+# Text Classification with Sparse Composite Document Vectors (SCDV)
 
 
 ## Introduction
   - For text classification and information retrieval tasks, text data has to be represented as a fixed dimension vector. 
-  - We propose simple feature construction technique named [**Sparse Composite Document Vectors (SCDV).**](https://www.aclweb.org/anthology/D17-1069.pdf), presented in EMNLP 2017.
+  - We propose simple feature construction technique named [**SCDV: Sparse Composite Document Vectors using soft clustering over distributional representations.**](https://www.aclweb.org/anthology/D17-1069.pdf) presented at EMNLP 2017.
   - We demonstrate our method through experiments on multi-class classification on 20newsgroup dataset and multi-label text classification on Reuters-21578 dataset. 
 
 ## Citation
@@ -101,6 +101,6 @@ Minimum requirements:
   -  Pandas
   -  Gensim
 
-For theory and explanation of SCDV, please visit our EMNLP 2017 [paper](https://www.aclweb.org/anthology/D17-1069.pdf).
+For theory and explanation of SCDV, please visit our [EMNLP 2017 paper](https://www.aclweb.org/anthology/D17-1069.pdf).
 
 Note: You neednot download 20Newsgroup or Reuters-21578 dataset. All datasets are present in their respective directories. We used SGMl parser for parsing Reuters-21578 dataset from [here](https://gist.github.com/herrfz/7967781)
