@@ -3,7 +3,7 @@
 
 ## Introduction
   - For text classification and information retrieval tasks, text data has to be represented as a fixed dimension vector. 
-  - We propose simple feature construction technique named [**Sparse Composite Document Vectors (SCDV).**](https://www.aclweb.org/anthology/D17-1069.pdf)
+  - We propose simple feature construction technique named [**Sparse Composite Document Vectors (SCDV).**](https://www.aclweb.org/anthology/D17-1069.pdf), presented in EMNLP 2017.
   - We demonstrate our method through experiments on multi-class classification on 20newsgroup dataset and multi-label text classification on Reuters-21578 dataset. 
 
 ## Citation
