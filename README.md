@@ -101,6 +101,6 @@ Minimum requirements:
   -  Pandas
   -  Gensim
 
-For theory and explanation of SCDV, please visit our [EMNLP 2017 paper](https://www.aclweb.org/anthology/D17-1069.pdf).
+For theory and explanation of SCDV, please visit our [EMNLP 2017 paper](https://www.aclweb.org/anthology/D17-1069.pdf), [BLOG](https://dheeraj7596.github.io/SDV/).
 
 Note: You neednot download 20Newsgroup or Reuters-21578 dataset. All datasets are present in their respective directories. We used SGMl parser for parsing Reuters-21578 dataset from [here](https://gist.github.com/herrfz/7967781)
