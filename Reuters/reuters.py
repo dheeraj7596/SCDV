@@ -17,6 +17,7 @@ import tarfile
 import itertools
 from pandas import DataFrame
 
+
 ###############################################################################
 # Reuters Dataset related routines
 ###############################################################################
@@ -29,6 +30,7 @@ def _not_in_sphinx():
 
 class ReutersParser(sgmllib.SGMLParser):
     """Utility class to parse a SGML file and yield documents one at a time."""
+
     def __init__(self, verbose=0):
         sgmllib.SGMLParser.__init__(self, verbose)
         self._reset()
@@ -45,11 +47,14 @@ class ReutersParser(sgmllib.SGMLParser):
 
     def parse(self, fd):
         self.docs = []
-        for chunk in fd:
-            self.feed(chunk)
-            for doc in self.docs:
-                yield doc
-            self.docs = []
+        try:
+            for chunk in fd:
+                self.feed(chunk)
+                for doc in self.docs:
+                    yield doc
+                self.docs = []
+        except:
+            pass
         self.close()
 
     def handle_data(self, data):
@@ -98,7 +103,6 @@ class ReutersParser(sgmllib.SGMLParser):
 
 
 class ReutersStreamReader():
-
     """Iterate over documents of the Reuters dataset.
     The Reuters archive will automatically be downloaded and uncompressed if
     the `data_path` directory does not exist.
@@ -127,6 +131,7 @@ class ReutersStreamReader():
             if _not_in_sphinx():
                 print('\rdownloaded %s / %s' % (current_sz_mb, total_sz_mb),
                       end='')
+
         urllib.urlretrieve(self.DOWNLOAD_URL,
                            filename=os.path.join(self.data_path,
                                                  self.ARCHIVE_FILENAME),

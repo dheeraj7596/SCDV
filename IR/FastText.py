@@ -4,7 +4,7 @@ import os
 import warnings
 
 warnings.filterwarnings(action='ignore', category=UserWarning, module='gensim')
-from gensim.models.word2vec import Word2Vec
+from gensim.models.fasttext import FastText
 from nltk.corpus import stopwords
 
 # logging is important to get the state of the functions
@@ -26,5 +26,5 @@ if __name__ == '__main__':
     params = {'size': int(sys.argv[1]), 'window': 5, 'min_count': 10,
               'workers': max(1, multiprocessing.cpu_count() - 1), 'hs': 0, 'sg': 1, 'negative': 10, 'iter': 30,
               'sample': 1e-3, 'seed': 1}
-    word2vec = Word2Vec(sentences, **params)
+    word2vec = FastText(sentences, **params)
     word2vec.save(folder + '/' + "word2vec.model")

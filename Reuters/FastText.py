@@ -2,7 +2,7 @@
 import pandas as pd
 import nltk.data
 import logging
-from gensim.models import Word2Vec
+from gensim.models import FastText
 from KaggleWord2VecUtility import KaggleWord2VecUtility
 import time
 import sys
@@ -14,14 +14,14 @@ if __name__ == '__main__':
     # The csv file might contain very huge fields, therefore set the field_size_limit to maximum.
     csv.field_size_limit(sys.maxsize)
     # Read train data.
-    train_word_vector = pd.read_csv('data/all_v2.tsv', header=0, delimiter="\t")
+    train_word_vector = pd.read_pickle('all.pkl')
     # Use the NLTK tokenizer to split the paragraph into sentences.
     tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
     sentences = []
     print("Parsing sentences from training set...")
 
     # Loop over each news article.
-    for review in train_word_vector["news"]:
+    for review in train_word_vector["text"]:
         try:
             # Split a review into parsed sentences.
             sentences += KaggleWord2VecUtility.review_to_sentences(review, tokenizer, remove_stopwords=True)
@@ -37,17 +37,17 @@ if __name__ == '__main__':
     context = 10  # Context window size
     downsampling = 1e-3  # Downsample setting for frequent words
 
-    print("Training Word2Vec model...")
-    # Train Word2Vec model.
-    model = Word2Vec(sentences, workers=num_workers, hs=0, sg=1, negative=10, iter=25, \
+    print("Training FastText model...")
+    # Train FastText model.
+    model = FastText(sentences, workers=num_workers, hs=0, sg=1, negative=10, iter=25, \
                      size=num_features, min_count=min_word_count, \
                      window=context, sample=downsampling, seed=1)
 
     model_name = str(num_features) + "features_" + str(min_word_count) + "minwords_" + str(
         context) + "context_len2alldata"
     model.init_sims(replace=True)
-    # Save Word2Vec model.
-    print("Saving Word2Vec model...")
+    # Save FastText model.
+    print("Saving FastText model...")
     model.save(model_name)
     endmodeltime = time.time()
 

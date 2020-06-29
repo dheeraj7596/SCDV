@@ -18,6 +18,11 @@ If you find SCDV useful in your research, please consider citing:
 }
 ```
 
+## New Features
+
+- **Python 3.7** As Python2 is deprecated, whole repository is moved to Python3.7.
+- **Support FastText.** The word vectors can be trained through Word2Vec or FastText.
+
 ## Testing
 There are 2 folders named 20news and Reuters which contains code related to multi-class classification on 20Newsgroup dataset and multi-label classification on Reuters dataset.
 
@@ -27,20 +32,29 @@ Change directory to 20news for experimenting on 20Newsgroup dataset and create t
 $ cd 20news
 $ python create_tsv.py
 ```
-Get word vectors for all words in vocabulary:
+Get word vectors for all words in vocabulary through Word2Vec:
 ```sh
 $ python Word2Vec.py 200
 # Word2Vec.py takes word vector dimension as an argument. We took it as 200.
 ```
+Get word vectors for all words in vocabulary through FastText:
+```sh
+$ python FastText.py 200
+# FastText.py takes word vector dimension as an argument. We took it as 200.
+```
 Get Sparse Document Vectors (SCDV) for documents in train and test set and accuracy of prediction on test set:
 ```sh
-$ python SCDV.py 200 60
-# SCDV.py takes word vector dimension and number of clusters as arguments. We took word vector dimension as 200 and number of clusters as 60.
+$ python SCDV.py 200 60 model_type
+# SCDV.py takes word vector dimension, number of clusters as arguments and model_type as arguments. Here
+model_type refers to the word vectors trained model types and hence it is one of "word2vec" or "fasttext".
+We took word vector dimension as 200 and number of clusters as 60.
 ```
 Get Topic coherence for documents in train set:
 ```sh
-$ python TopicCoherence.py 200 60
-# TopicCoherence.py takes word vector dimension and number of clusters as arguments. We took word vector dimension as 200 and number of clusters as 60.
+$ python TopicCoherence.py 200 60 10 model_type
+# TopicCoherence.py takes word vector dimension, number of clusters, number of top words and model_type as arguments. 
+Here model_type refers to the word vectors trained model types and hence it is one of "word2vec" or "fasttext". 
+We took word vector dimension as 200, number of clusters as 60 and number of top words as 10.
 ```
 #### Reuters
 Change directory to Reuters for experimenting on Reuters-21578 dataset. As reuters data is in SGML format, parsing data and creating pickle file of parsed data can be done as follows:
@@ -48,15 +62,22 @@ Change directory to Reuters for experimenting on Reuters-21578 dataset. As reute
 $ python create_data.py
 # We don't save train and test files locally. We split data into train and test whenever needed.
 ```
-Get word vectors for all words in vocabulary: 
+Get word vectors for all words in vocabulary through Word2Vec:
 ```sh
 $ python Word2Vec.py 200
 # Word2Vec.py takes word vector dimension as an argument. We took it as 200.
 ```
-Get Sparse Document Vectors (SCDV) for documents in train and test set:
+Get word vectors for all words in vocabulary through FastText:
 ```sh
-$ python SCDV.py 200 60
-# SCDV.py takes word vector dimension and number of clusters as arguments. We took word vector dimension as 200 and number of clusters as 60.
+$ python FastText.py 200
+# FastText.py takes word vector dimension as an argument. We took it as 200.
+```
+Get Sparse Document Vectors (SCDV) for documents in train and test set and accuracy of prediction on test set:
+```sh
+$ python SCDV.py 200 60 model_type
+# SCDV.py takes word vector dimension, number of clusters as arguments and model_type as arguments. Here
+model_type refers to the word vectors trained model types and hence it is one of "word2vec" or "fasttext".
+We took word vector dimension as 200 and number of clusters as 60.
 ```
 Get performance metrics on test set:
 ```sh
@@ -79,15 +100,22 @@ Data Format
 
 To interpolate language model retrieval system with the query-document score obtained from SCDV:
 
-Get word vectors for all terms in vocabulary:
+Get word vectors for all terms in vocabulary through Word2Vec:
 ```sh
 $ python Word2Vec.py 300 sjm
 # Word2Vec.py takes word vector dimension and folder containing IR dataset as arguments. We took 300 and sjm (San Jose Mercury).
 ```
+Get word vectors for all terms in vocabulary through FastText:
+```sh
+$ python FastText.py 300 sjm
+# FastText.py takes word vector dimension and folder containing IR dataset as arguments. We took 300 and sjm (San Jose Mercury).
+```
 Create Sparse Document Vectors (SCDV) for all documents and queries and compute similarity scores for all query-document pairs.
 ```sh
-$ python SCDV.py 300 100 sjm
-# SCDV.py takes word vector dimension, number of clusters as arguments and folder containing IR dataset as arguments. We took 300 100 and sjm.
+$ python SCDV.py 300 100 sjm model_type
+# SCDV.py takes word vector dimension, number of clusters, folder containing IR dataset, and model_type as arguments. 
+Here model_type refers to the word vectors trained model types and hence it is one of "word2vec" or "fasttext". We took 
+word vector dimension as 300, number of clusters as 100, and folder as sjm.
 # Change the code to store these scores in a format that can be used by the IR system.
 ```
 Use these scores to interpolate with the language model scores with interpolation parameter 0.5.
@@ -95,11 +123,12 @@ Use these scores to interpolate with the language model scores with interpolatio
 
 ## Requirements
 Minimum requirements:
-  -  Python 2.7+
-  -  NumPy 1.8+
-  -  Scikit-learn
-  -  Pandas
-  -  Gensim
+  -  Python 3.7
+  -  NumPy 1.17.2
+  -  Scikit-learn 0.23.1
+  -  Pandas 0.25.1
+  -  Gensim 3.8.1
+  -  sgmllib3k
 
 For theory and explanation of SCDV, please visit our [EMNLP 2017 paper](https://www.aclweb.org/anthology/D17-1069.pdf), [BLOG](https://dheeraj7596.github.io/SDV/).
 
