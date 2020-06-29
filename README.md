@@ -45,16 +45,12 @@ $ python FastText.py 200
 Get Sparse Document Vectors (SCDV) for documents in train and test set and accuracy of prediction on test set:
 ```sh
 $ python SCDV.py 200 60 model_type
-# SCDV.py takes word vector dimension, number of clusters as arguments and model_type as arguments. Here
-model_type refers to the word vectors trained model types and hence it is one of "word2vec" or "fasttext".
-We took word vector dimension as 200 and number of clusters as 60.
+# SCDV.py takes word vector dimension, number of clusters as arguments and model_type as arguments. Here model_type refers to the word vectors trained model types and hence it is one of "word2vec" or "fasttext". We took word vector dimension as 200 and number of clusters as 60.
 ```
 Get Topic coherence for documents in train set:
 ```sh
 $ python TopicCoherence.py 200 60 10 model_type
-# TopicCoherence.py takes word vector dimension, number of clusters, number of top words and model_type as arguments. 
-Here model_type refers to the word vectors trained model types and hence it is one of "word2vec" or "fasttext". 
-We took word vector dimension as 200, number of clusters as 60 and number of top words as 10.
+# TopicCoherence.py takes word vector dimension, number of clusters, number of top words and model_type as arguments. Here model_type refers to the word vectors trained model types and hence it is one of "word2vec" or "fasttext". We took word vector dimension as 200, number of clusters as 60 and number of top words as 10.
 ```
 #### Reuters
 Change directory to Reuters for experimenting on Reuters-21578 dataset. As reuters data is in SGML format, parsing data and creating pickle file of parsed data can be done as follows:
@@ -75,9 +71,7 @@ $ python FastText.py 200
 Get Sparse Document Vectors (SCDV) for documents in train and test set and accuracy of prediction on test set:
 ```sh
 $ python SCDV.py 200 60 model_type
-# SCDV.py takes word vector dimension, number of clusters as arguments and model_type as arguments. Here
-model_type refers to the word vectors trained model types and hence it is one of "word2vec" or "fasttext".
-We took word vector dimension as 200 and number of clusters as 60.
+# SCDV.py takes word vector dimension, number of clusters as arguments and model_type as arguments. Here model_type refers to the word vectors trained model types and hence it is one of "word2vec" or "fasttext". We took word vector dimension as 200 and number of clusters as 60.
 ```
 Get performance metrics on test set:
 ```sh
@@ -113,9 +107,7 @@ $ python FastText.py 300 sjm
 Create Sparse Document Vectors (SCDV) for all documents and queries and compute similarity scores for all query-document pairs.
 ```sh
 $ python SCDV.py 300 100 sjm model_type
-# SCDV.py takes word vector dimension, number of clusters, folder containing IR dataset, and model_type as arguments. 
-Here model_type refers to the word vectors trained model types and hence it is one of "word2vec" or "fasttext". We took 
-word vector dimension as 300, number of clusters as 100, and folder as sjm.
+# SCDV.py takes word vector dimension, number of clusters, folder containing IR dataset, and model_type as arguments. Here model_type refers to the word vectors trained model types and hence it is one of "word2vec" or "fasttext". We took word vector dimension as 300, number of clusters as 100, and folder as sjm.
 # Change the code to store these scores in a format that can be used by the IR system.
 ```
 Use these scores to interpolate with the language model scores with interpolation parameter 0.5.
@@ -132,4 +124,4 @@ Minimum requirements:
 
 For theory and explanation of SCDV, please visit our [EMNLP 2017 paper](https://www.aclweb.org/anthology/D17-1069.pdf), [BLOG](https://dheeraj7596.github.io/SDV/).
 
-Note: You neednot download 20Newsgroup or Reuters-21578 dataset. All datasets are present in their respective directories. We used SGMl parser for parsing Reuters-21578 dataset from [here](https://gist.github.com/herrfz/7967781)
+Note: You need not download 20Newsgroup or Reuters-21578 dataset. All datasets are present in their respective directories. We used SGMl parser for parsing Reuters-21578 dataset from [here](https://gist.github.com/herrfz/7967781)
